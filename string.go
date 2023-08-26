@@ -1,8 +1,11 @@
 package jsontostruct
 
 import (
+	"database/sql/driver"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"strings"
 )
 
@@ -34,6 +37,33 @@ func (c *String) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (c String) String() string {
-	return string(c)
+func (c *String) IsNil() bool {
+	return c == nil
+}
+
+func (c *String) String() string {
+	if c.IsNil() {
+		return ""
+	}
+
+	return string(*c)
+}
+
+func (c *String) Scan(value interface{}) error {
+	bytes, ok := value.([]byte)
+	if !ok {
+		return errors.New(fmt.Sprint("failed to unmarshal String value:", value))
+	}
+
+	*c = String(string(bytes))
+
+	return nil
+}
+
+func (c String) Value() (driver.Value, error) {
+	if len(c) == 0 {
+		return nil, nil
+	}
+
+	return c.String(), nil
 }
