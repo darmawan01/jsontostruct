@@ -23,7 +23,7 @@ func SetPasshrase(p string) {
 	passphrase = p
 }
 
-func passphraseToKey(passphrase string) []byte {
+func passphraseToKey() []byte {
 	var runes []rune
 	for _, l := range passphrase {
 		runes = append(runes, l)
@@ -37,7 +37,6 @@ func passphraseToKey(passphrase string) []byte {
 }
 
 func DecryptByPassphrase(cyphertext []byte) (string, error) {
-
 	// Only support V2 (AES)
 	if len(cyphertext) > 0 {
 		if cyphertext[0] != sql_v2 {
@@ -47,7 +46,7 @@ func DecryptByPassphrase(cyphertext []byte) (string, error) {
 		return "", errors.New("chyphertext is empty")
 	}
 
-	key := passphraseToKey(passphrase)
+	key := passphraseToKey()
 
 	block, e := aes.NewCipher(key)
 	if e != nil {
