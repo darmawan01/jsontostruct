@@ -6,12 +6,13 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 )
 
-type IntToDate time.Time
+type DateFromInt time.Time
 
-func (i IntToDate) MarshalJSON() ([]byte, error) {
+func (i DateFromInt) MarshalJSON() ([]byte, error) {
 	val, err := strconv.Atoi(time.Time(i).Format("20060102"))
 	if err != nil {
 		return nil, err
@@ -20,34 +21,34 @@ func (i IntToDate) MarshalJSON() ([]byte, error) {
 
 }
 
-func (i *IntToDate) UnmarshalJSON(data []byte) error {
-	var value int
+func (i *DateFromInt) UnmarshalJSON(data []byte) error {
+	var value float64
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
 
-	dateString := fmt.Sprintf("%d", value)
+	dateString := strings.Split(fmt.Sprintf("%f", value), ".")[0]
 	layout := "20060102"
 	date, err := time.Parse(layout, dateString)
 	if err != nil {
 		return err
 	}
 
-	*i = IntToDate(date)
+	*i = DateFromInt(date)
 	return nil
 }
 
-func (i *IntToDate) Scan(value interface{}) error {
+func (i *DateFromInt) Scan(value interface{}) error {
 	t, ok := value.(time.Time)
 	if !ok {
 		return errors.New(fmt.Sprint("failed to unmarshal IntToDate value:", value))
 	}
-	*i = IntToDate(t)
+	*i = DateFromInt(t)
 
 	return nil
 }
 
-func (c IntToDate) Value() (driver.Value, error) {
+func (c DateFromInt) Value() (driver.Value, error) {
 
 	return c, nil
 }
