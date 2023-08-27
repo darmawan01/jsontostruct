@@ -38,6 +38,10 @@ func (i *DateFromInt) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+func (i *DateFromInt) Time() time.Time {
+	return time.Time(*i)
+}
+
 func (i *DateFromInt) Scan(value interface{}) error {
 	t, ok := value.(time.Time)
 	if !ok {
@@ -48,6 +52,6 @@ func (i *DateFromInt) Scan(value interface{}) error {
 	return nil
 }
 
-func (c DateFromInt) Value() (driver.Value, error) {
-	return time.Time(c), nil
+func (i *DateFromInt) Value() (driver.Value, error) {
+	return i.Time(), nil
 }
