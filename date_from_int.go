@@ -43,12 +43,11 @@ func (i *DateFromInt) Scan(value interface{}) error {
 	if !ok {
 		return errors.New(fmt.Sprint("failed to unmarshal IntToDate value:", value))
 	}
-	*i = DateFromInt(t)
 
+	*i = DateFromInt(t)
 	return nil
 }
 
 func (c DateFromInt) Value() (driver.Value, error) {
-
-	return c, nil
+	return time.Time(c), nil
 }

@@ -2,6 +2,7 @@ package jsontostruct
 
 import (
 	"encoding/json"
+	"log"
 	"testing"
 	"time"
 )
@@ -46,4 +47,5 @@ func TestDateFromInt(t *testing.T) {
 	if value != date {
 		t.Errorf("Unexpected value: got %v, want %v", value, date)
 	}
+	log.Println(value)
 }
