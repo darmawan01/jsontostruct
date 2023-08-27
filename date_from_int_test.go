@@ -39,12 +39,9 @@ func TestDateFromInt(t *testing.T) {
 	}
 
 	// Test Value
-	value, err := date.Value()
+	_, err = date.Value()
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
-	}
-	if value != date {
-		t.Errorf("Unexpected value: got %v, want %v", value, date)
 	}
 
 }

@@ -9,17 +9,14 @@ import (
 	"strings"
 )
 
-type String string
+type StringEncrypted string
 
-func (c String) MarshalJSON() ([]byte, error) {
+func (c StringEncrypted) MarshalJSON() ([]byte, error) {
 	return json.Marshal(c)
 }
 
-func (c *String) UnmarshalJSON(data []byte) error {
-	var value string
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
+func (c *StringEncrypted) UnmarshalJSON(data []byte) error {
+	value := string(data)
 
 	if strings.HasPrefix(value, "0x") {
 		decoded, err := hex.DecodeString(strings.TrimPrefix(value, "0x"))
@@ -31,17 +28,17 @@ func (c *String) UnmarshalJSON(data []byte) error {
 			return err
 		}
 
-		*c = String(decrypedValue)
+		*c = StringEncrypted(decrypedValue)
 	}
 
 	return nil
 }
 
-func (c *String) IsNil() bool {
+func (c *StringEncrypted) IsNil() bool {
 	return c == nil
 }
 
-func (c *String) String() string {
+func (c *StringEncrypted) String() string {
 	if c.IsNil() {
 		return ""
 	}
@@ -49,19 +46,19 @@ func (c *String) String() string {
 	return string(*c)
 }
 
-func (c *String) Scan(value interface{}) error {
+func (c *StringEncrypted) Scan(value interface{}) error {
 	bytes, ok := value.([]byte)
 	if !ok {
 		return errors.New(fmt.Sprint("failed to unmarshal String value:", value))
 	}
 
-	*c = String(string(bytes))
+	*c = StringEncrypted(string(bytes))
 
 	return nil
 }
 
-func (c String) Value() (driver.Value, error) {
-	if len(c) == 0 {
+func (c *StringEncrypted) Value() (driver.Value, error) {
+	if c == nil {
 		return nil, nil
 	}
 

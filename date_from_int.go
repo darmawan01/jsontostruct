@@ -22,12 +22,14 @@ func (i DateFromInt) MarshalJSON() ([]byte, error) {
 }
 
 func (i *DateFromInt) UnmarshalJSON(data []byte) error {
-	var value float64
-	if err := json.Unmarshal(data, &value); err != nil {
+	dataStr := string(data)
+
+	value, err := strconv.Atoi(dataStr)
+	if err != nil {
 		return err
 	}
 
-	dateString := strings.Split(fmt.Sprintf("%f", value), ".")[0]
+	dateString := strings.Split(fmt.Sprintf("%d", value), ".")[0]
 	layout := "20060102"
 	date, err := time.Parse(layout, dateString)
 	if err != nil {

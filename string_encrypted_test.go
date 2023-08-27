@@ -81,7 +81,7 @@ func TestDecryptedStructOnUnmarshal(t *testing.T) {
 
 	// Unmarshal the JSON string into a struct
 	var myStruct struct {
-		Field String `json:"field"`
+		Field StringEncrypted `json:"field"`
 	}
 	err = json.Unmarshal([]byte(jsonStr), &myStruct)
 	if err != nil {
