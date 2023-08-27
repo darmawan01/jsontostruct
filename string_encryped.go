@@ -16,7 +16,10 @@ func (c StringEncrypted) MarshalJSON() ([]byte, error) {
 }
 
 func (c *StringEncrypted) UnmarshalJSON(data []byte) error {
-	value := string(data)
+	var value string
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
 
 	if strings.HasPrefix(value, "0x") {
 		decoded, err := hex.DecodeString(strings.TrimPrefix(value, "0x"))
