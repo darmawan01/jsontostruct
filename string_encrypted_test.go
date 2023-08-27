@@ -9,7 +9,7 @@ import (
 func TestDecryptedStructOnUnmarshal(t *testing.T) {
 	encryptedValue := "0x02000000BF87541AB3E917E2B5AC21075FFD338CE45A59B994D53F05DECDE386EBC85BEB"
 
-	SetPasshrase("P4ss P0lR!&#")
+	SetPasshrase("secret")
 
 	expectedDecryptedValue := "060"
 
