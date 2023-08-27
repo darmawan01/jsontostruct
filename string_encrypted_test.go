@@ -9,7 +9,7 @@ import (
 func TestDecryptedStructOnUnmarshal(t *testing.T) {
 	encryptedValue := "0x02000000BF87541AB3E917E2B5AC21075FFD338CE45A59B994D53F05DECDE386EBC85BEB"
 
-	SetPasshrase("secret")
+	SetPasshrase("P4ss P0lR!&#")
 
 	expectedDecryptedValue := "060"
 
@@ -26,7 +26,17 @@ func TestDecryptedStructOnUnmarshal(t *testing.T) {
 	}
 
 	// Check if the decrypted value matches the expected value
-	if !strings.EqualFold(myStruct.Field.String(), expectedDecryptedValue) {
+	if !strings.EqualFold(*myStruct.Field.String(), expectedDecryptedValue) {
 		t.Errorf("Unexpected decrypted value: got %s, want %s", myStruct.Field, expectedDecryptedValue)
+	}
+
+	v, err := myStruct.Field.MarshalJSON()
+	if err != nil {
+		t.Fatalf("Failed to marshal JSON: %v", err)
+	}
+
+	if *myStruct.Field.String() != string(v) {
+		t.Errorf("Unexpected decrypted value: got %s, want %s", myStruct.Field, string(v))
+
 	}
 }

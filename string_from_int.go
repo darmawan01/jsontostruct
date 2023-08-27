@@ -19,8 +19,11 @@ func (s StringFromInt) MarshalJSON() ([]byte, error) {
 }
 
 func (s *StringFromInt) UnmarshalJSON(data []byte) error {
-	value := string(data)
+	if data != nil {
+		value := string(data)
 
-	*s = StringFromInt(value)
+		*s = StringFromInt(value)
+	}
+
 	return nil
 }

@@ -2,6 +2,7 @@ package jsontostruct
 
 import (
 	"encoding/json"
+	"log"
 	"testing"
 	"time"
 )
@@ -43,5 +44,18 @@ func TestDateFromInt(t *testing.T) {
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
+
+	type test struct {
+		Date DateFromInt `json:"date"`
+	}
+
+	var tests test
+	jsonStr := `{"date": 20230107}`
+	err = json.Unmarshal([]byte(jsonStr), &tests)
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+
+	log.Println(tests.Date.Value())
 
 }

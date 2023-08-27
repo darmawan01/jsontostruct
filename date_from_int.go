@@ -2,23 +2,16 @@ package jsontostruct
 
 import (
 	"database/sql/driver"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 )
 
 type DateFromInt time.Time
 
 func (i DateFromInt) MarshalJSON() ([]byte, error) {
-	val, err := strconv.Atoi(time.Time(i).Format("20060102"))
-	if err != nil {
-		return nil, err
-	}
-	return json.Marshal(val)
-
+	return []byte(time.Time(i).Format("20060102")), nil
 }
 
 func (i *DateFromInt) UnmarshalJSON(data []byte) error {
@@ -29,9 +22,8 @@ func (i *DateFromInt) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	dateString := strings.Split(fmt.Sprintf("%d", value), ".")[0]
 	layout := "20060102"
-	date, err := time.Parse(layout, dateString)
+	date, err := time.Parse(layout, fmt.Sprintf("%d", value))
 	if err != nil {
 		return err
 	}
@@ -41,6 +33,10 @@ func (i *DateFromInt) UnmarshalJSON(data []byte) error {
 }
 
 func (i *DateFromInt) Time() time.Time {
+	if i == nil {
+		return time.Time{}
+	}
+
 	return time.Time(*i)
 }
 

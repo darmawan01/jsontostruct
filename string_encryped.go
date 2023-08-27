@@ -12,7 +12,7 @@ import (
 type StringEncrypted string
 
 func (c StringEncrypted) MarshalJSON() ([]byte, error) {
-	return json.Marshal(c)
+	return []byte(*c.String()), nil
 }
 
 func (c *StringEncrypted) UnmarshalJSON(data []byte) error {
@@ -41,12 +41,13 @@ func (c *StringEncrypted) IsNil() bool {
 	return c == nil
 }
 
-func (c *StringEncrypted) String() string {
+func (c *StringEncrypted) String() *string {
 	if c.IsNil() {
-		return ""
+		return nil
 	}
 
-	return string(*c)
+	val := string(*c)
+	return &val
 }
 
 func (c *StringEncrypted) Scan(value interface{}) error {
@@ -61,9 +62,5 @@ func (c *StringEncrypted) Scan(value interface{}) error {
 }
 
 func (c *StringEncrypted) Value() (driver.Value, error) {
-	if c == nil {
-		return nil, nil
-	}
-
 	return c.String(), nil
 }
