@@ -25,6 +25,9 @@ func (i *DateTimeFromDateTime) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
+	if value == "" {
+		return nil
+	}
 	date, err := time.Parse(layoutDtFromDt, value)
 	if err != nil {
 		return err
