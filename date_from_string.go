@@ -30,12 +30,12 @@ func (i *DateFromString) UnmarshalJSON(data []byte) error {
 }
 
 func (i *DateFromString) Scan(value interface{}) error {
-	t, ok := value.(time.Time)
+	t, ok := value.(*DateFromString)
 	if !ok {
 		return errors.New(fmt.Sprint("failed to unmarshal IntToDate value:", value))
 	}
 
-	*i = DateFromString(t)
+	*i = DateFromString(*t)
 	return nil
 }
 

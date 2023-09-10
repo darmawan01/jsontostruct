@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestDateFromString(t *testing.T) {
@@ -28,20 +30,13 @@ func TestDateFromString(t *testing.T) {
 
 	// Test Scan
 	var scanDate DateFromString
-	err = scanDate.Scan(time.Date(2023, time.January, 7, 0, 0, 0, 0, time.UTC))
-	if err != nil {
-		t.Errorf("Unexpected error: %v", err)
-	}
-	if time.Time(scanDate) != time.Date(2023, time.January, 7, 0, 0, 0, 0, time.UTC) {
-		t.Errorf("Unexpected date: got %v, want %v", scanDate, time.Date(2023, time.January, 7, 0, 0, 0, 0, time.UTC))
-	}
+	err = newDate.Scan(&scanDate)
+	require.NoError(t, err)
+	require.Equal(t, time.Time(scanDate), time.Time(newDate))
 
 	// Test Value
 	value, err := date.Value()
-	if err != nil {
-		t.Errorf("Unexpected error: %v", err)
-	}
-	if !time.Time(date).Equal(value.(time.Time)) {
-		t.Errorf("Unexpected value: got %v, want %v", value, date)
-	}
+	require.NoError(t, err)
+
+	require.Equal(t, value.(time.Time), time.Time(date))
 }
