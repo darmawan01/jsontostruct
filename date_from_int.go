@@ -44,7 +44,7 @@ func (i *DateFromInt) Scan(value interface{}) error {
 
 func (i DateFromInt) Value() (driver.Value, error) {
 	if time.Time(i).IsZero() {
-		return "0000-00-00 00:00:00", nil
+		return nil, nil
 	}
 	return time.Time(i), nil
 }
