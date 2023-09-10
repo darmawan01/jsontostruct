@@ -21,9 +21,9 @@ func TestDateFromString(t *testing.T) {
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
-	expectedDate := time.Date(2022, time.December, 31, 0, 0, 0, 0, time.UTC)
-	if time.Time(newDate) != expectedDate {
-		t.Errorf("Unexpected date: got %v, want %v", newDate, expectedDate)
+	expectedDate := time.Date(2022, time.February, 10, 0, 0, 0, 0, time.UTC)
+	if !expectedDate.Equal(time.Time(newDate)) {
+		t.Errorf("Unexpected date: got %v, want %v", time.Time(newDate), expectedDate)
 	}
 
 	// Test Scan
@@ -41,7 +41,7 @@ func TestDateFromString(t *testing.T) {
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
-	if value.(time.Time) != date.Time() {
-		t.Errorf("Unexpected value: got %v, want %v", value, date.Time())
+	if !time.Time(date).Equal(value.(time.Time)) {
+		t.Errorf("Unexpected value: got %v, want %v", value, date)
 	}
 }

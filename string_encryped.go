@@ -61,6 +61,6 @@ func (c *StringEncrypted) Scan(value interface{}) error {
 	return nil
 }
 
-func (c *StringEncrypted) Value() (driver.Value, error) {
+func (c StringEncrypted) Value() (driver.Value, error) {
 	return c.String(), nil
 }
