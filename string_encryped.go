@@ -26,13 +26,23 @@ func (c *StringEncrypted) UnmarshalJSON(data []byte) error {
 		if err != nil {
 			return err
 		}
-		decrypedValue, err := DecryptByPassphrase(decoded)
+		value, err = DecryptByPassphrase(decoded)
 		if err != nil {
 			return err
 		}
 
-		*c = StringEncrypted(decrypedValue)
 	}
+
+	var newVal string
+	for _, v := range value {
+		if v == 160 { // for &nsbp
+			newVal += " "
+			continue
+		}
+		newVal += string(v)
+	}
+	newVal = strings.ReplaceAll(newVal, "'", `"`)
+	*c = StringEncrypted(newVal)
 
 	return nil
 }
