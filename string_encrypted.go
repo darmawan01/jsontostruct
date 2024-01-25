@@ -11,9 +11,9 @@ import (
 
 type StringEncrypted string
 
-func (c StringEncrypted) MarshalJSON() ([]byte, error) {
-	return []byte(*c.String()), nil
-}
+// func (c StringEncrypted) MarshalJSON() ([]byte, error) {
+// 	return []byte(*c.String()), nil
+// }
 
 func (c *StringEncrypted) UnmarshalJSON(data []byte) error {
 	var value string

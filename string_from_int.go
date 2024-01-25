@@ -8,6 +8,9 @@ import (
 type StringFromInt string
 
 func (s StringFromInt) MarshalJSON() ([]byte, error) {
+	if s == "null" {
+		return []byte("0"), nil
+	}
 
 	val, err := strconv.Atoi(string(s))
 	if err != nil {
@@ -15,7 +18,6 @@ func (s StringFromInt) MarshalJSON() ([]byte, error) {
 	}
 
 	return json.Marshal(val)
-
 }
 
 func (s *StringFromInt) UnmarshalJSON(data []byte) error {

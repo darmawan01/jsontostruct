@@ -29,14 +29,4 @@ func TestDecryptedStructOnUnmarshal(t *testing.T) {
 	if !strings.EqualFold(*myStruct.Field.String(), expectedDecryptedValue) {
 		t.Errorf("Unexpected decrypted value: got %s, want %s", myStruct.Field, expectedDecryptedValue)
 	}
-
-	v, err := myStruct.Field.MarshalJSON()
-	if err != nil {
-		t.Fatalf("Failed to marshal JSON: %v", err)
-	}
-
-	if *myStruct.Field.String() != string(v) {
-		t.Errorf("Unexpected decrypted value: got %s, want %s", myStruct.Field, string(v))
-
-	}
 }
