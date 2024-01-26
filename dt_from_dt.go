@@ -38,12 +38,39 @@ func (i *DateTimeFromDateTime) UnmarshalJSON(data []byte) error {
 }
 
 func (i *DateTimeFromDateTime) Scan(value interface{}) error {
-	t, ok := value.(*DateTimeFromDateTime)
-	if !ok {
-		return errors.New(fmt.Sprint("failed to scan DateTimeFromDateTime value:", value))
+	switch t := value.(type) {
+	case *DateTimeFromDateTime:
+		*i = *t
+	case DateTimeFromDateTime:
+		*i = t
+	case string:
+		date, err := time.Parse(time.RFC3339, t)
+		if err != nil {
+			return err
+		}
+
+		*i = DateTimeFromDateTime(date)
+
+	case time.Time:
+		*i = DateTimeFromDateTime(t)
+
+	case *string:
+		if t != nil {
+			date, err := time.Parse(time.RFC3339, *t)
+			if err != nil {
+				return err
+			}
+			*i = DateTimeFromDateTime(date)
+		}
+	case *time.Time:
+		if t != nil {
+			*i = DateTimeFromDateTime(*t)
+		}
+
+	default:
+		return errors.New(fmt.Sprint("failed to unmarshal DateTimeFromDateTime value:", value))
 	}
 
-	*i = DateTimeFromDateTime(*t)
 	return nil
 }
 
