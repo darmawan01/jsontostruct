@@ -61,12 +61,18 @@ func (c *StringEncrypted) String() *string {
 }
 
 func (c *StringEncrypted) Scan(value interface{}) error {
-	bytes, ok := value.([]byte)
-	if !ok {
+	switch t := value.(type) {
+	case string:
+		*c = StringEncrypted(t)
+	case []byte:
+		*c = StringEncrypted(string(t))
+	case *string:
+		*c = StringEncrypted(*t)
+	case *[]byte:
+		*c = StringEncrypted(string(*t))
+	default:
 		return errors.New(fmt.Sprint("failed to unmarshal String value:", value))
 	}
-
-	*c = StringEncrypted(string(bytes))
 
 	return nil
 }
