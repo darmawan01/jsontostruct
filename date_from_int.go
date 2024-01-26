@@ -33,12 +33,32 @@ func (i *DateFromInt) UnmarshalJSON(data []byte) error {
 }
 
 func (i *DateFromInt) Scan(value interface{}) error {
-	t, ok := value.(time.Time)
-	if !ok {
+	switch t := value.(type) {
+	case string:
+		date, err := time.Parse(time.RFC3339, t)
+		if err != nil {
+			return err
+		}
+		*i = DateFromInt(date)
+	case time.Time:
+		*i = DateFromInt(t)
+	case *string:
+		if t != nil {
+			date, err := time.Parse(time.RFC3339, *t)
+			if err != nil {
+				return err
+			}
+			*i = DateFromInt(date)
+		}
+	case *time.Time:
+		if t != nil {
+			*i = DateFromInt(*t)
+		}
+	default:
 		return errors.New(fmt.Sprint("failed to unmarshal IntToDate value:", value))
+
 	}
 
-	*i = DateFromInt(t)
 	return nil
 }
 
