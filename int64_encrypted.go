@@ -56,12 +56,18 @@ func (c *Int64Encrypted) String() string {
 }
 
 func (c *Int64Encrypted) Scan(value interface{}) error {
-	i, ok := value.(*Int64Encrypted)
-	if !ok {
+	switch t := value.(type) {
+	case *Int64Encrypted:
+		*c = *t
+	case Int64Encrypted:
+		*c = t
+	case int64:
+		*c = Int64Encrypted(t)
+	case *int64:
+		*c = Int64Encrypted(*t)
+	default:
 		return errors.New(fmt.Sprint("failed to unmarshal Int64Encrypted value:", value))
 	}
-
-	*c = Int64Encrypted(*i)
 
 	return nil
 }
