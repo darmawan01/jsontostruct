@@ -62,12 +62,9 @@ func (i *DateFromInt) Scan(value interface{}) error {
 	return nil
 }
 
-func (i *DateFromInt) Value() (driver.Value, error) {
-	if i == nil {
+func (i DateFromInt) Value() (driver.Value, error) {
+	if time.Time(i).IsZero() {
 		return nil, nil
 	}
-	if time.Time(*i).IsZero() {
-		return nil, nil
-	}
-	return time.Time(*i), nil
+	return time.Time(i), nil
 }
