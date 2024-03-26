@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"strconv"
 	"time"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type DateFromInt time.Time
@@ -71,8 +69,5 @@ func (i *DateFromInt) Value() (driver.Value, error) {
 	if time.Time(*i).IsZero() {
 		return nil, nil
 	}
-	return pgtype.Time{
-		Microseconds: time.Time(*i).UnixMicro(),
-		Valid:        true,
-	}, nil
+	return time.Time(*i), nil
 }
