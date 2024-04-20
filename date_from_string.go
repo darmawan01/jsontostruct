@@ -30,6 +30,7 @@ func (i *DateFromString) UnmarshalJSON(data []byte) error {
 }
 
 func (i *DateFromString) Scan(value interface{}) error {
+	layout := "2006-01-02"
 	switch t := value.(type) {
 	case *DateFromString:
 		*i = *t
@@ -38,7 +39,10 @@ func (i *DateFromString) Scan(value interface{}) error {
 	case string:
 		date, err := time.Parse(time.RFC3339, t)
 		if err != nil {
-			return err
+			date, err = time.Parse(layout, t)
+			if err != nil {
+				return err
+			}
 		}
 		*i = DateFromString(date)
 	case time.Time:
@@ -47,7 +51,10 @@ func (i *DateFromString) Scan(value interface{}) error {
 		if t != nil {
 			date, err := time.Parse(time.RFC3339, *t)
 			if err != nil {
-				return err
+				date, err = time.Parse(layout, *t)
+				if err != nil {
+					return err
+				}
 			}
 			*i = DateFromString(date)
 		}
@@ -65,5 +72,5 @@ func (i DateFromString) Value() (driver.Value, error) {
 	if time.Time(i).IsZero() {
 		return nil, nil
 	}
-	return time.Time(i), nil
+	return time.Time(i).Format(time.RFC3339), nil
 }

@@ -46,7 +46,10 @@ func (i *DateTimeFromDateTime) Scan(value interface{}) error {
 	case string:
 		date, err := time.Parse(time.RFC3339, t)
 		if err != nil {
-			return err
+			date, err = time.Parse(layoutDtFromDt, t)
+			if err != nil {
+				return err
+			}
 		}
 
 		*i = DateTimeFromDateTime(date)
@@ -58,7 +61,10 @@ func (i *DateTimeFromDateTime) Scan(value interface{}) error {
 		if t != nil {
 			date, err := time.Parse(time.RFC3339, *t)
 			if err != nil {
-				return err
+				date, err = time.Parse(layoutDtFromDt, *t)
+				if err != nil {
+					return err
+				}
 			}
 			*i = DateTimeFromDateTime(date)
 		}
@@ -78,5 +84,5 @@ func (i DateTimeFromDateTime) Value() (driver.Value, error) {
 	if time.Time(i).IsZero() {
 		return nil, nil
 	}
-	return time.Time(i), nil
+	return time.Time(i).Format(time.RFC3339), nil
 }
