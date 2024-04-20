@@ -33,11 +33,15 @@ func (i *DateFromInt) UnmarshalJSON(data []byte) error {
 }
 
 func (i *DateFromInt) Scan(value interface{}) error {
+	layout := "20060102"
 	switch t := value.(type) {
 	case string:
 		date, err := time.Parse(time.RFC3339, t)
 		if err != nil {
-			return err
+			date, err = time.Parse(layout, t)
+			if err != nil {
+				return err
+			}
 		}
 		*i = DateFromInt(date)
 	case time.Time:
@@ -46,7 +50,10 @@ func (i *DateFromInt) Scan(value interface{}) error {
 		if t != nil {
 			date, err := time.Parse(time.RFC3339, *t)
 			if err != nil {
-				return err
+				date, err = time.Parse(layout, *t)
+				if err != nil {
+					return err
+				}
 			}
 			*i = DateFromInt(date)
 		}
