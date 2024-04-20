@@ -66,5 +66,5 @@ func (i DateFromInt) Value() (driver.Value, error) {
 	if time.Time(i).IsZero() {
 		return nil, nil
 	}
-	return time.Time(i), nil
+	return time.Time(i).Format(time.RFC3339), nil
 }
