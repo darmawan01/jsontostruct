@@ -18,7 +18,13 @@ type StringEncrypted string
 func (c *StringEncrypted) UnmarshalJSON(data []byte) error {
 	var value string
 	if err := json.Unmarshal(data, &value); err != nil {
-		return err
+		var value float64
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+
+		*c = StringEncrypted(fmt.Sprintf("%v", value))
+		return nil
 	}
 
 	if strings.HasPrefix(value, "0x02") {
