@@ -38,7 +38,15 @@ func (c *Int64Encrypted) UnmarshalJSON(data []byte) error {
 		}
 
 		*c = Int64Encrypted(i)
+		return nil
 	}
+
+	i, err := strconv.Atoi(value)
+	if err != nil {
+		*c = Int64Encrypted(0)
+	}
+
+	*c = Int64Encrypted(i)
 
 	return nil
 }
